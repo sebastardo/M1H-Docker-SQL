@@ -3,7 +3,7 @@ services:
     container_name: postgres
     image: postgres:17-alpine
     environment:
-      POSTGRES_USER: 'git '
+      POSTGRES_USER: 'psql'
       POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'ny_taxi'
     ports:

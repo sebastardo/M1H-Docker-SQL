@@ -8,11 +8,14 @@ import click
 
 @click.command()
 @click.option('--host', default='localhost', help='PostgreSQL host')
-@click.option('--port', default=5432, type=int, help='PostgreSQL port')
+@click.option('--port', default=5433, type=int, help='PostgreSQL port')
 def main(host, port):
-    engine = create_engine(f"postgresql://postgres:postgres@{host}:{port}/ny_taxi")
+    engine = create_engine(f"postgresql://psql:postgres@{host}:{port}/ny_taxi")
 
-    df_trips = pd.read_parquet("/data/green_tripdata_2025-11.parquet", engine="pyarrow")
+
+
+    df_trips = pd.read_parquet("data/green_tripdata_2025-11.parquet", engine="pyarrow")
+    
     df_trips.to_sql(name="trip_data", con=engine, if_exists="replace")
 
     dtypes_zones = {
@@ -22,7 +25,7 @@ def main(host, port):
         "service_zone": "category",
     }
 
-    df_zones = pd.read_csv("/data/taxi_zone_lookup.csv", dtype=dtypes_zones)
+    df_zones = pd.read_csv("data/taxi_zone_lookup.csv", dtype=dtypes_zones)
     df_zones = df_zones.set_index("LocationID")
     df_zones.to_sql(
         name="zones",
@@ -34,8 +37,7 @@ def main(host, port):
 
 
 if __name__ == "__main__":
-    main()
-
-
-
-
+    try:
+        main()
+    except Exception as e:
+        print(f"Error: {e}")
