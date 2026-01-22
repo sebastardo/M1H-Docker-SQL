@@ -34,13 +34,9 @@ limit 1;
 -- Question 6. Largest tip
 -- For the passengers picked up in the zone named "East Harlem North" in November 2025, which was the drop off zone that had the largest tip?
 -- Note: it's tip , not trip. We need the name of the zone, not the ID.
-
-select z."Zone", td.tip_amount  from trip_data td 
+select z."Zone" from trip_data td 
 join zones z on td."DOLocationID" = z."LocationID" 
-where td."PULocationID" = (
-	select z2."LocationID" from zones z2 
-	where z2."Zone" = 'East Harlem North'
-	)
-order by td.tip_amount desc;
-
-
+join zones z2 on td."PULocationID" = z2."LocationID"
+where z2."Zone" = 'East Harlem North'
+order by td.tip_amount desc 
+limit 1;
